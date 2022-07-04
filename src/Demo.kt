@@ -4,6 +4,8 @@ import ThreadSchedulerDemo.Script
  * @author Jak Shadowrs (tardisfan121@gmail.com)
  */
 object Demo {
+
+    // p.s test() method body hotswap will work, but standard Java does not support hotswap of Anonymous classes (lambda expressions: code within the run({}) block)
     fun test() {
 
         ThreadSchedulerDemo.run {
@@ -25,7 +27,8 @@ object Demo {
 
         onInteraction {
             printf("kotlin demo 3 start")
-            var i = 3
+            var i = 10
+            wait(1)
             while (i-- > 0) {
                 wait(1)
                 printf("demo 3- part $i")

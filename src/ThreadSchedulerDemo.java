@@ -57,11 +57,8 @@ public class ThreadSchedulerDemo {
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println("[App "+timestamp()+"] begin");
-        run(s -> {
-            System.out.println("\t[Task "+timestamp()+"] start script");
-            s.wait(2); // expect this to park
-            System.out.println("\t[Task "+timestamp()+"] wow donezo!");
-        });
+        test1();
+        Demo.INSTANCE.test();// kick off a kotlin written task
         int cycles = 0;
         while (true) {
             System.out.println("[Scheduler "+timestamp()+"] loop "+cycles+" on main thread "+Thread.currentThread().getClass().getName());
@@ -77,13 +74,24 @@ public class ThreadSchedulerDemo {
                     task.ticks--;
                 }
             }
-            if (cycles == 1)
-                Demo.INSTANCE.test();// kick off a kotlin written task
             tasks.removeIf(s -> s.completed);
             if (tasks.size() == 0)
                 System.exit(0);
             cycles++;
             Thread.sleep(Duration.ofMillis(1_000));
         }
+    }
+
+    // p.s test() method body hotswap will work, but standard Java does not support hotswap of Anonymous classes (lambda expressions: code within the run({}) block)
+    private static void test1() {
+        run(s -> {
+            System.out.println("\t[Task "+timestamp()+"] start script");
+            int i = 5;
+            while (i-- > 0) {
+                s.wait(2); // expect this to park
+                s.printf("heyXX %s", i);
+            }
+            test1();
+        });
     }
 }
