@@ -24,6 +24,7 @@ private static void test1() {
         for (int i=0; i<10; i)) {
             s.printf("hi "+i);
              // change this text and hotswap
+             s.delay(1);
         }
         
         test1();
