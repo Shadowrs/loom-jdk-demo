@@ -23,10 +23,14 @@ public class ThreadSchedulerDemo {
 
         public final void wait(int ticks) {
             this.ticks = ticks;
-            System.out.printf("\t[Task %s] %s waiting %s cycles until continue%n", timestamp(), Thread.currentThread(), ticks);
+            printf("%s waiting %s cycles until continue", Thread.currentThread(), ticks);
             LockSupport.park();
         }
         public boolean completed;
+
+        public void printf(String format, Object... args) {
+            System.out.printf("\t[Task %s] %s%n", timestamp(), String.format(format, args));
+        }
     }
 
     @FunctionalInterface
@@ -34,21 +38,21 @@ public class ThreadSchedulerDemo {
         void accept(T t) throws Exception;
     }
 
-    static final ArrayList<Script> tasks = new ArrayList<>();
-    static void run(ConsumerEx<Script> script) {
-        Script placeholder = new Script();
-        tasks.add(placeholder);
+    private static final ArrayList<Script> tasks = new ArrayList<>();
+    public static void run(ConsumerEx<Script> work) {
+        Script script = new Script();
+        tasks.add(script);
 
-        placeholder.thread = Thread.ofVirtual().unstarted(() -> {
+        script.thread = Thread.ofVirtual().unstarted(() -> {
             try {
-                script.accept(placeholder);
+                work.accept(script);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            System.out.printf("\t[Task %s] %s done!%n", timestamp(), placeholder.thread);
-            placeholder.completed = true;
+            script.printf("%s done!", script.thread);
+            script.completed = true;
         });
-        placeholder.thread.start();
+        script.thread.start();
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -56,7 +60,7 @@ public class ThreadSchedulerDemo {
         run(s -> {
             System.out.println("\t[Task "+timestamp()+"] start script");
             s.wait(2); // expect this to park
-            System.out.println("\t[Task "+timestamp()+"] hi!");
+            System.out.println("\t[Task "+timestamp()+"] wow donezo!");
         });
         int cycles = 0;
         while (true) {
@@ -73,6 +77,8 @@ public class ThreadSchedulerDemo {
                     task.ticks--;
                 }
             }
+            if (cycles == 1)
+                Demo.INSTANCE.test();// kick off a kotlin written task
             tasks.removeIf(s -> s.completed);
             if (tasks.size() == 0)
                 System.exit(0);
