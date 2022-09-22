@@ -1,6 +1,4 @@
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.concurrent.locks.LockSupport;
 
@@ -9,11 +7,6 @@ import java.util.concurrent.locks.LockSupport;
  * @author Jak | Shadowrs (tardisfan121@gmail.com)
  */
 public class ThreadSchedulerDemo {
-
-    static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("hh:ss");
-    static String timestamp() {
-        return DTF.format(LocalDateTime.now());
-    }
 
     public static class Script {
         public boolean ready;
@@ -29,7 +22,7 @@ public class ThreadSchedulerDemo {
         public boolean completed;
 
         public void printf(String format, Object... args) {
-            System.out.printf("\t[Task %s] %s%n", timestamp(), String.format(format, args));
+            System.out.printf("\t[Task %s] %s%n", Misc.timestamp(), String.format(format, args));
         }
     }
 
@@ -38,7 +31,7 @@ public class ThreadSchedulerDemo {
         void accept(T t) throws Exception;
     }
 
-    private static final ArrayList<Script> tasks = new ArrayList<>();
+    public static final ArrayList<Script> tasks = new ArrayList<>();
     public static void run(ConsumerEx<Script> work) {
         Script script = new Script();
         tasks.add(script);
@@ -55,19 +48,16 @@ public class ThreadSchedulerDemo {
         script.thread.start();
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        System.out.println("[App "+timestamp()+"] begin");
-        test1();
-        Demo.INSTANCE.test();// kick off a kotlin written task
+    public static void mainAppLoop() throws InterruptedException {
         int cycles = 0;
         while (true) {
-            System.out.println("[Scheduler "+timestamp()+"] loop "+cycles+" on main thread "+Thread.currentThread().getClass().getName());
+            System.out.println("[Scheduler "+ Misc.timestamp()+"] loop "+cycles+" on main thread "+Thread.currentThread().getClass().getName());
             tasks.removeIf(s -> s.completed);
             for (Script task : tasks) {
                 if (task.ticks == 0)
                     task.ready = true;
                 if (task.ready) {
-                    System.out.println("[Scheduler "+timestamp()+"] >> resuming task with thread: "+task.thread);
+                    System.out.println("[Scheduler "+ Misc.timestamp()+"] >> resuming task with thread: "+task.thread);
                     LockSupport.unpark(task.thread);
                 }
                 if (task.ticks > 0) {
@@ -82,16 +72,4 @@ public class ThreadSchedulerDemo {
         }
     }
 
-    // p.s test() method body hotswap will work, but standard Java does not support hotswap of Anonymous classes (lambda expressions: code within the run({}) block)
-    private static void test1() {
-        run(s -> {
-            System.out.println("\t[Task "+timestamp()+"] start script");
-            int i = 5;
-            while (i-- > 0) {
-                s.wait(2); // expect this to park
-                s.printf("heyXX %s", i);
-            }
-            test1();
-        });
-    }
 }

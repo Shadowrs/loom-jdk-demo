@@ -1,9 +1,16 @@
+import KotlinLambdasDemo.test
 import ThreadSchedulerDemo.Script
+
+fun main() {
+    System.out.println("[App " + Misc.timestamp() + "] begin")
+    test() // kick off a kotlin written task
+    ThreadSchedulerDemo.mainAppLoop()
+}
 
 /**
  * @author Jak Shadowrs (tardisfan121@gmail.com)
  */
-object Demo {
+object KotlinLambdasDemo {
 
     // p.s test() method body hotswap will work, but standard Java does not support hotswap of Anonymous classes (lambda expressions: code within the run({}) block)
     fun test() {
