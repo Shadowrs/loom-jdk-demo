@@ -1,4 +1,4 @@
-# Demo of Loom on the JDK
+# Demo of Project Loom & Continuations on the JDK
 
 ```
 [App 12:20] begin
@@ -36,9 +36,15 @@ private static void test1() {
 ```
 
 
-#### DCEVM & Hotswap Agent Support
-DCEVM provides support for hotswapping anonymous classes, add/removing/modifying fields, annotations, member classes and enums. 
+#### DCEVM & Loom
+The default hotswap capability in Java is limited. 
 
-Since Loom is in Early Access built on JDK-19, we can't get support for DCEVM+HotswapAgent only avaiable on [Jdks 8, 11 and 17](http://hotswapagent.org/mydoc_quickstart-jdk17.html). 
+The [DCEVM](https://dcevm.github.io/) Project "allows unlimited redefinition of loaded classes at runtime" - including hotswapping anonymous classes, add/removing/modifying fields, annotations, member classes and enums. 
 
-Jetbrains runtimes have only been released based on LTS-jdks (long term support) which is jdk 11 & 17. The next LTS release is [Jdk-21 due September 2023](https://www.java.com/releases/). Here is hoping Loom is delivered by then!
+When a project makes large use of Lambdas - the most important part is the ability to hotswap code anonymous classes, which is what a lambda is.
+
+Virtual Threads were added in JDK-19 as a preview feature (requires --enable-preview VM args) as part of Loom. 
+
+DCEVM, as of September 2022, is only available on openJDK 7-11, and as of march 2022 Jetbrains hired one of the DCEVM project developers and has contributed to adding DCEVM into [Jetbrain's Runtime JDK 17](https://github.com/JetBrains/JetBrainsRuntime/releases) which is awesome. 
+
+Since the goal is to get DCEVM and Virtual Threads together, I exchanged emails and inquired about Jetbrain's intentions of releasing their Runtime with DCEVM on-top of JDK 19 or later. They are discussing it but no decisions have been made! After all, Jetbrains runtimes have only been released based on LTS-jdks (long term support) which is jdk 11 & 17. The next LTS release is [Jdk-21 due September 2023](https://www.java.com/releases/). 
