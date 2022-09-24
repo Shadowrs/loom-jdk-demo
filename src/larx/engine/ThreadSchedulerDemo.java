@@ -1,3 +1,7 @@
+package larx.engine;
+
+import larx.Misc;
+
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.concurrent.locks.LockSupport;
@@ -27,7 +31,7 @@ public class ThreadSchedulerDemo {
     }
 
     @FunctionalInterface
-    interface ConsumerEx<T> {
+    public interface ConsumerEx<T> {
         void accept(T t) throws Exception;
     }
 

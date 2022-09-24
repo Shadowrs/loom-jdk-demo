@@ -1,5 +1,7 @@
-
-import ThreadSchedulerDemo.Script
+package larx.ktdemos
+import larx.engine.ThreadSchedulerDemo
+import larx.engine.ThreadSchedulerDemo.Script
+import larx.Misc
 
 fun main() {
     System.out.println("[App " + Misc.timestamp() + "] begin")
