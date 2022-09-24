@@ -18,17 +18,17 @@ public class JLambdaDemo {
             s.printf("start script");
             int i = 0;
            // s.wait(5);
-            s.printf("well "+i);
+            s.printf("well "+i++);
             s.wait(5);
-            s.printf("well "+i);
+            s.printf("well "+i++);
             s.wait(5);
-            s.printf("well "+i);
+            s.printf("well "+i++);
             s.wait(5);
-            s.printf("well "+i);
+            s.printf("well "+i++);
             s.wait(5);
-            s.printf("well "+i);
+            s.printf("well "+i++);
             s.wait(5);
-            s.printf("well "+i);
+            s.printf("well "+i++);
         });
     }
 }

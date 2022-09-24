@@ -51,7 +51,7 @@ public class ThreadSchedulerDemo {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            script.printf("script reached end. i am ", script.thread);
+            script.printf("script reached end. i am %s", script.thread);
             script.completed = true;
         });
         script.thread.start();
