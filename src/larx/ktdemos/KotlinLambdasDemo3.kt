@@ -5,8 +5,9 @@ import larx.Misc
 
 fun main() {
     System.out.println("[App " + Misc.timestamp() + "] begin")
-    KotlinLambdasDemo3.test() // kick off a kotlin written task
     ThreadSchedulerDemo.mainAppLoop()
+
+    KotlinLambdasDemo3.test() // kick off a kotlin written task
 }
 
 /**

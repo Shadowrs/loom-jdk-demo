@@ -6,8 +6,9 @@ import kotlin.system.exitProcess
 
 fun main() {
     System.out.println("[App " + Misc.timestamp() + "] begin")
-    KotlinLambdasDemo2.test() // kick off a kotlin written task
     ThreadSchedulerDemo.mainAppLoop()
+
+    KotlinLambdasDemo2.test() // kick off a kotlin written task
 }
 
 /**
